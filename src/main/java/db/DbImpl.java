@@ -48,7 +48,7 @@ public class DbImpl {
             if(iccid.startsWith("02")) {
                 sql = SqlQuery.CDI_PHONE;
             } else if (iccid.startsWith("01")) {
-                sql = SqlQuery.CDI_PHONE;
+                sql = SqlQuery.CDI_MODEM;
             } else {
                 throw new SQLException("Wrong iccid");
             }

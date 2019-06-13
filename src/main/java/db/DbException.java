@@ -10,7 +10,4 @@ public class DbException extends SQLException {
     public DbException(String reason) {
         super(reason);
     }
-
-    public DbException() {
-    }
 }
