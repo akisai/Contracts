@@ -36,9 +36,9 @@ public class HtmlDoc implements Parse {
                     writer.append((char) d);
                 }
             }
-            String encodedDocument = "<html><body><pre>\n" +  new String(writer.toCharArray()) + "\n</pre></body></html>";
+            String encodedDocument = new String(writer.toCharArray());
 
-            Utils.writeFile(new File(saveFolder + "_agreement.docx"), encodedDocument);
+            Utils.writeFile(new File(saveFolder + "_agreement.txt"), encodedDocument);
         } catch (IOException e) {
             throw new ParseException(e.getMessage());
         }
