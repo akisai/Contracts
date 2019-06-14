@@ -5,7 +5,6 @@ import com.yota.decoder.ParseException;
 import com.yota.utils.Utils;
 
 import java.io.*;
-import java.util.Base64;
 
 /**
  * Created by haimin-a on 13.06.2019.
@@ -18,9 +17,7 @@ public class HtmlDoc implements Parse {
         CharArrayWriter writer = new CharArrayWriter();
         char[] unicodeChar = new char[4];
 
-        final InputStream in = Base64.getMimeDecoder().wrap(inputStream);
-
-        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(in)) ) {
+        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream)) ) {
             int d;
             while ((d = reader.read()) != -1) {
                 if (d == 38) {
@@ -39,9 +36,9 @@ public class HtmlDoc implements Parse {
                     writer.append((char) d);
                 }
             }
-            String encodedDocument = new String(writer.toCharArray());
+            String encodedDocument = "<html><body><pre>\n" +  new String(writer.toCharArray()) + "\n</pre></body></html>";
 
-            Utils.writeFile(new File(saveFolder + "_agreement.doc"), encodedDocument);
+            Utils.writeFile(new File(saveFolder + "_agreement.docx"), encodedDocument);
         } catch (IOException e) {
             throw new ParseException(e.getMessage());
         }
