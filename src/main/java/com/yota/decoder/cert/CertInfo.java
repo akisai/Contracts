@@ -25,10 +25,10 @@ public class CertInfo implements Parse {
         StringBuilder result = new StringBuilder();
 
         try {
-            InputStream in = Base64.getMimeDecoder().wrap(inputStream);
-            ASN1InputStream asn1In = new ASN1InputStream(in);
-            ASN1Primitive certInfo = asn1In.readObject();
-            ASN1Sequence seq = ASN1Sequence.getInstance(certInfo);
+            final InputStream in = Base64.getMimeDecoder().wrap(inputStream);
+            final ASN1InputStream asn1In = new ASN1InputStream(in);
+            final ASN1Primitive certInfo = asn1In.readObject();
+            final ASN1Sequence seq = ASN1Sequence.getInstance(certInfo);
             Enumeration enumeration = seq.getObjects();
 
             CertUtils.parseASN1(result, enumeration);
