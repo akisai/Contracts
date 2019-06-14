@@ -1,10 +1,12 @@
-package decoder.cert;
+package utils;
 
+import decoder.cert.OidMap;
 import javafx.util.Pair;
 import org.bouncycastle.asn1.*;
 
 import java.text.ParseException;
 import java.util.Enumeration;
+import java.util.Map;
 
 /**
  * Created by haimin-a on 13.06.2019.
@@ -62,9 +64,9 @@ public class CertUtils {
     }
 
     private static String checkId(String id) {
-        for(Pair<String, String> oid: OidMap.oids) {
-            if(oid.getKey().equals(id)) {
-                return oid.getValue();
+        for (Map.Entry<String, String> entry : OidMap.oids.entrySet()) {
+            if (entry.getKey().equals(id)) {
+                return entry.getValue();
             }
         }
         return "";

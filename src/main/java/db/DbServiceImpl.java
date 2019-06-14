@@ -1,20 +1,23 @@
 package db;
 
+import utils.SqlUtils;
+
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by haimin-a on 06.06.2019.
  */
-public class DbImpl {
+public class DbServiceImpl implements DbService{
 
-    public List<InputStream> getCa(String caId) throws DbException {
-        List<InputStream> streams = new ArrayList<>();
+    @Override
+    public Map<String, InputStream> getCa(String caId) throws DbException {
+        Map<String, InputStream> streams = new HashMap<>();
         try ( Connection conn = SqlUtils.getConnection(DataBase.CA) ) {
             try ( PreparedStatement preparedStatement = conn.prepareStatement(SqlQuery.CA)) {
                 preparedStatement.setString(1, caId);
@@ -23,11 +26,11 @@ public class DbImpl {
                         if (rs.getString("id").equals("")) {
                             throw new SQLException("2");
                         } else if(caId.startsWith("1")) {
-                            streams.add(rs.getBinaryStream("eds"));
-                            streams.add(rs.getBinaryStream("agreement"));
+                            streams.put("cert", rs.getBinaryStream("eds"));
+                            streams.put("html", rs.getBinaryStream("agreement"));
                         } else if(caId.startsWith("2")) {
-                            streams.add(rs.getBinaryStream("eds"));
-                            streams.add(rs.getBinaryStream("sign"));
+                            streams.put("cert", rs.getBinaryStream("eds"));
+                            streams.put("html", rs.getBinaryStream("sign"));
                         }
                     }
                 }
@@ -41,6 +44,7 @@ public class DbImpl {
         return streams;
     }
 
+    @Override
     public String getCaId(String iccid) throws DbException {
         String caId = null;
         try ( Connection cn = SqlUtils.getConnection(DataBase.CDI) ) {
@@ -55,7 +59,7 @@ public class DbImpl {
             try ( PreparedStatement preparedStatement = cn.prepareStatement(sql)) {
                 preparedStatement.setString(1, iccid);
                 try(ResultSet rs = preparedStatement.executeQuery()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         caId = rs.getString("ca_id");
                     }
                 }
