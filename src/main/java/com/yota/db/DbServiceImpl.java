@@ -1,8 +1,11 @@
 package com.yota.db;
 
 import com.yota.utils.SqlUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CloseShieldInputStream;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,17 +30,19 @@ public class DbServiceImpl implements DbService{
                         if (rs.getString("id").equals("")) {
                             throw new SQLException("Not found CA");
                         } else if(caId.startsWith("1")) {
-                            CloseShieldInputStream eds = new CloseShieldInputStream(rs.getBinaryStream("eds"));
+                            byte[] eds = IOUtils.toByteArray(rs.getBinaryStream("eds"));
                             CloseShieldInputStream agreement = new CloseShieldInputStream(rs.getBinaryStream("agreement"));
-                            streams.put("cert", eds);
+                            streams.put("cert", new ByteArrayInputStream(eds));
                             streams.put("html", agreement);
                         } else if(caId.startsWith("2")) {
-                            CloseShieldInputStream eds = new CloseShieldInputStream(rs.getBinaryStream("eds"));
+                            byte[] eds = IOUtils.toByteArray(rs.getBinaryStream("eds"));
                             CloseShieldInputStream agreement = new CloseShieldInputStream(rs.getBinaryStream("sign"));
-                            streams.put("cert", eds);
+                            streams.put("cert", new ByteArrayInputStream(eds));
                             streams.put("html", agreement);
                         }
                     }
+                } catch (IOException e) {
+                    throw new DbException("Cert not found");
                 }
             }
         } catch (SQLException e) {
