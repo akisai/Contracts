@@ -1,6 +1,7 @@
 package com.yota.db;
 
 import com.yota.utils.SqlUtils;
+import org.apache.commons.io.input.CloseShieldInputStream;
 
 import java.io.InputStream;
 import java.sql.Connection;
@@ -26,11 +27,15 @@ public class DbServiceImpl implements DbService{
                         if (rs.getString("id").equals("")) {
                             throw new SQLException("Not found CA");
                         } else if(caId.startsWith("1")) {
-                            streams.put("cert", rs.getBinaryStream("eds"));
-                            streams.put("html", rs.getBinaryStream("agreement"));
+                            CloseShieldInputStream eds = new CloseShieldInputStream(rs.getBinaryStream("eds"));
+                            CloseShieldInputStream agreement = new CloseShieldInputStream(rs.getBinaryStream("agreement"));
+                            streams.put("cert", eds);
+                            streams.put("html", agreement);
                         } else if(caId.startsWith("2")) {
-                            streams.put("cert", rs.getBinaryStream("eds"));
-                            streams.put("html", rs.getBinaryStream("sign"));
+                            CloseShieldInputStream eds = new CloseShieldInputStream(rs.getBinaryStream("eds"));
+                            CloseShieldInputStream agreement = new CloseShieldInputStream(rs.getBinaryStream("sign"));
+                            streams.put("cert", eds);
+                            streams.put("html", agreement);
                         }
                     }
                 }
