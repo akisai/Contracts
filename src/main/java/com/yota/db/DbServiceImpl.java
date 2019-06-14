@@ -31,14 +31,14 @@ public class DbServiceImpl implements DbService{
                             throw new SQLException("Not found CA");
                         } else if(caId.startsWith("1")) {
                             byte[] eds = IOUtils.toByteArray(rs.getBinaryStream("eds"));
-                            CloseShieldInputStream agreement = new CloseShieldInputStream(rs.getBinaryStream("agreement"));
+                            byte[] agreement = IOUtils.toByteArray(rs.getBinaryStream("agreement"));
                             streams.put("cert", new ByteArrayInputStream(eds));
-                            streams.put("html", agreement);
+                            streams.put("html", new ByteArrayInputStream(agreement));
                         } else if(caId.startsWith("2")) {
                             byte[] eds = IOUtils.toByteArray(rs.getBinaryStream("eds"));
-                            CloseShieldInputStream agreement = new CloseShieldInputStream(rs.getBinaryStream("sign"));
+                            byte[] agreement = IOUtils.toByteArray(rs.getBinaryStream("sign"));
                             streams.put("cert", new ByteArrayInputStream(eds));
-                            streams.put("html", agreement);
+                            streams.put("html", new ByteArrayInputStream(agreement));
                         }
                     }
                 } catch (IOException e) {
