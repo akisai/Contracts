@@ -106,9 +106,4 @@ public class Contracts extends JPanel {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
-    public void setStatus(String status) {
-        this.status.setText(status);
-        this.status.setForeground(Color.RED);
-    }
 }
