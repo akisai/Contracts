@@ -6,13 +6,11 @@ package com.yota.db;
 public class SqlQuery {
     public static String CDI_PHONE = "select ca_id from contract_party c\n" +
             "where c.icc_id = ?\n" +
-            "and c.version = 0\n" +
             "and c.ca_id is not null\n" +
             "and c.enddate is null";
 
     public static String CDI_MODEM = "select ca_id from agreement a\n" +
             "where a.enddate is null\n" +
-            "and a.version = 0\n" +
             "and a.ca_id is not null\n" +
             "and a.iccid = ?";
 

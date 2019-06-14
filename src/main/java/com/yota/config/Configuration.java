@@ -19,7 +19,7 @@ public class Configuration {
     private DbConfig caDb;
 
     public Configuration() throws ConfigException {
-        String dir = System.getProperty("user.home") + "\\.contracts_1.0";
+        String dir = System.getProperty("user.home") + System.getProperty("file.separator") + ".contracts_1.0";
         this.configFolder = new File(dir);
         readConfig();
     }
