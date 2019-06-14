@@ -24,13 +24,17 @@ public class DbServiceImpl implements DbService{
                 try ( ResultSet rs = preparedStatement.executeQuery()) {
                     if (rs.next()) {
                         if (rs.getString("id").equals("")) {
-                            throw new SQLException("2");
+                            throw new SQLException("Not found CA");
                         } else if(caId.startsWith("1")) {
-                            streams.put("cert", rs.getBinaryStream("eds"));
-                            streams.put("html", rs.getBinaryStream("agreement"));
+                            final InputStream eds = rs.getBinaryStream("eds");
+                            final InputStream agreement = rs.getBinaryStream("agreement");
+                            streams.put("cert", eds);
+                            streams.put("html", agreement);
                         } else if(caId.startsWith("2")) {
-                            streams.put("cert", rs.getBinaryStream("eds"));
-                            streams.put("html", rs.getBinaryStream("sign"));
+                            final InputStream eds = rs.getBinaryStream("eds");
+                            final InputStream agreement = rs.getBinaryStream("sign");
+                            streams.put("cert", eds);
+                            streams.put("html", agreement);
                         }
                     }
                 }
