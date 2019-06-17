@@ -62,32 +62,25 @@ public class Contracts extends JPanel {
 
                 DbService db = new DbServiceImpl();
 
-                try {
-                    String caId = db.getCaId(iccid.getText());
-                    Map<String, InputStream> steams = db.getCa(caId);
+                String caId = db.getCaId(iccid.getText());
+                Map<String, InputStream> steams = db.getCa(caId);
 
-                    final CountDownLatch latch = new CountDownLatch(2);
-                    try {
-                        steams.forEach((k, v) -> {
-                            Thread thread = new Thread(() -> {
-                                try {
-                                    new Decoder().create(k).parse(v, new File(configuration.getSaveFolder(), iccid.getText()));
-                                } catch (ParseException ex) {
-                                    /* */
-                                } finally {
-                                    latch.countDown();
-                                }
-                            });
-                            thread.start();
-                        });
-                        latch.await();
-                    } catch (InterruptedException ex) {
-                        Utils.showExDialog(ex.getMessage());
-                    }
-                } catch (DbException ex) {
-                    Utils.showExDialog(ex.getMessage());
-                }
-            } catch (NumberFormatException ex) {
+                final CountDownLatch latch = new CountDownLatch(2);
+
+                steams.forEach((k, v) -> {
+                    Thread thread = new Thread(() -> {
+                        try {
+                            new Decoder().create(k).parse(v, new File(configuration.getSaveFolder(), iccid.getText()));
+                        } catch (ParseException ex) {
+                            SwingUtilities.invokeLater(() -> Utils.showExDialog(ex.getMessage()));
+                        } finally {
+                            latch.countDown();
+                        }
+                    });
+                    thread.start();
+                });
+                latch.await();
+            } catch (InterruptedException | DbException ex) {
                 Utils.showExDialog(ex.getMessage());
             }
 
