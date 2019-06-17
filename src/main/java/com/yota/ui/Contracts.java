@@ -33,6 +33,7 @@ public class Contracts extends JPanel {
     private JLabel status;
     private JFrame frame;
 
+    private ProgressBar progressBar;
     private Configuration configuration;
 
     public Contracts() {
@@ -56,14 +57,20 @@ public class Contracts extends JPanel {
 
         generateButton.addActionListener(e -> {
             status.setText("");
+            Boolean complete = true;
 
             try {
                 Utils.validateInput(iccid.getText());
 
+                initProgressBar();
+
                 DbService db = new DbServiceImpl();
 
                 String caId = db.getCaId(iccid.getText());
+                updateProgressBar(20);
+
                 Map<String, InputStream> steams = db.getCa(caId);
+                updateProgressBar(20);
 
                 final CountDownLatch latch = new CountDownLatch(2);
 
@@ -80,12 +87,20 @@ public class Contracts extends JPanel {
                     thread.start();
                 });
                 latch.await();
-            } catch (InterruptedException | DbException ex) {
+            } catch (NumberFormatException | InterruptedException | DbException ex) {
                 Utils.showExDialog(ex.getMessage());
+                complete = false;
+            } finally {
+                progressBar.dispose();
             }
 
-            status.setText("Done");
-            status.setForeground(new Color(22, 157, 0));
+            if (complete) {
+                status.setText("Done");
+                status.setForeground(new Color(22, 157, 0));
+            } else {
+                status.setText("Error");
+                status.setForeground(Color.RED);
+            }
         });
     }
 
@@ -104,6 +119,20 @@ public class Contracts extends JPanel {
         frame.setSize(500, 300);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    public void initProgressBar() {
+        progressBar = new ProgressBar();
+        progressBar.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        progressBar.setSize(400, 20);
+        progressBar.setVisible(true);
+    }
+
+    public void updateProgressBar(Integer value) {
+        int newValue = progressBar.getGenProgress().getValue() + value;
+        newValue = newValue > progressBar.getGenProgress().getMaximum() ? 100 : newValue;
+        progressBar.getGenProgress().setValue(newValue);
+        progressBar.getGenProgress().setString(String.valueOf(newValue) + "%");
     }
 
     {
