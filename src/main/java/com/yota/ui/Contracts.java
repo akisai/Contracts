@@ -79,7 +79,10 @@ public class Contracts extends JPanel {
                         try {
                             new Decoder().create(k).parse(v, new File(configuration.getSaveFolder(), iccid.getText()));
                         } catch (ParseException ex) {
-                            SwingUtilities.invokeLater(() -> Utils.showExDialog(ex.getMessage()));
+                            SwingUtilities.invokeLater(() -> {
+                                Utils.showExDialog(ex.getMessage());
+                                updateProgressBar(30);
+                            });
                         } finally {
                             latch.countDown();
                         }
