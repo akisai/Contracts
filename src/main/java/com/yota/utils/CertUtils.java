@@ -3,6 +3,7 @@ package com.yota.utils;
 import com.yota.decoder.cert.OidMap;
 import org.bouncycastle.asn1.*;
 
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.Enumeration;
 import java.util.Map;
@@ -40,11 +41,11 @@ public class CertUtils {
                 } else if (obj instanceof ASN1UTCTime) {
                     try {
                         if (first) {
-                            result.append("NotBefore:\n");
+                            result.append("NotBefore: ");
                             result.append(((ASN1UTCTime) obj).getDate().toString()).append("\n");
                             first = false;
                         } else {
-                            result.append("NotAfter:\n");
+                            result.append("NotAfter: ");
                             result.append(((ASN1UTCTime) obj).getDate().toString()).append("\n");
                             first = true;
                         }
@@ -57,6 +58,10 @@ public class CertUtils {
                     result.append(((DERNumericString) obj).getString()).append("\n");
                 } else if (obj instanceof DERPrintableString) {
                     result.append(((DERPrintableString) obj).getString()).append("\n");
+                } else if (obj instanceof  ASN1Integer) {
+                    if(obj.toString().length() > 5) {
+                        result.append("Serial: ").append(new BigInteger(obj.toString()).toString(16)).append("\n");
+                    }
                 }
             }
         }
