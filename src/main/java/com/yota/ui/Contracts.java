@@ -95,6 +95,7 @@ public class Contracts extends JPanel {
                 complete = false;
             } finally {
                 progressBar.setVisible(false);
+                frame.setVisible(true);
                 progressBar.dispose();
             }
 
@@ -127,6 +128,7 @@ public class Contracts extends JPanel {
 
     private void initProgressBar() {
         progressBar = new ProgressBar();
+        frame.setVisible(false);
         progressBar.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         progressBar.setSize(400, 20);
         progressBar.setVisible(true);
