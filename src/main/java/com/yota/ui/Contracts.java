@@ -67,10 +67,10 @@ public class Contracts extends JPanel {
                 DbService db = new DbServiceImpl();
 
                 String caId = db.getCaId(iccid.getText());
-                updateProgressBar(20);
+                SwingUtilities.invokeLater(() -> updateProgressBar(20));
 
                 Map<String, InputStream> steams = db.getCa(caId);
-                updateProgressBar(20);
+                SwingUtilities.invokeLater(() -> updateProgressBar(20));
 
                 final CountDownLatch latch = new CountDownLatch(2);
 
@@ -94,8 +94,6 @@ public class Contracts extends JPanel {
                 Utils.showExDialog(ex.getMessage());
                 complete = false;
             } finally {
-                progressBar.setVisible(false);
-                frame.setVisible(true);
                 progressBar.dispose();
             }
 
@@ -127,11 +125,13 @@ public class Contracts extends JPanel {
     }
 
     private void initProgressBar() {
-        progressBar = new ProgressBar();
-        frame.setVisible(false);
-        progressBar.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        progressBar.setSize(400, 20);
-        progressBar.setVisible(true);
+        Thread thread =  new Thread(() -> {
+            progressBar = new ProgressBar();
+            progressBar.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            progressBar.setSize(400, 20);
+            progressBar.setVisible(true);
+        });
+        thread.run();
     }
 
     private void updateProgressBar(Integer value) {
