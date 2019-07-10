@@ -62,15 +62,15 @@ public class Contracts extends JPanel {
             try {
                 Utils.validateInput(iccid.getText());
 
-                initProgressBar();
+                //initProgressBar();
 
                 DbService db = new DbServiceImpl();
 
                 String caId = db.getCaId(iccid.getText());
-                SwingUtilities.invokeLater(() -> updateProgressBar(20));
+                //SwingUtilities.invokeLater(() -> updateProgressBar(20));
 
                 Map<String, InputStream> steams = db.getCa(caId);
-                SwingUtilities.invokeLater(() -> updateProgressBar(20));
+                //SwingUtilities.invokeLater(() -> updateProgressBar(20));
 
                 final CountDownLatch latch = new CountDownLatch(2);
 
@@ -81,7 +81,7 @@ public class Contracts extends JPanel {
                         } catch (ParseException ex) {
                             SwingUtilities.invokeLater(() -> {
                                 Utils.showExDialog(ex.getMessage());
-                                updateProgressBar(30);
+                                //updateProgressBar(30);
                             });
                         } finally {
                             latch.countDown();
@@ -93,9 +93,9 @@ public class Contracts extends JPanel {
             } catch (NumberFormatException | InterruptedException | DbException ex) {
                 Utils.showExDialog(ex.getMessage());
                 complete = false;
-            } finally {
+            } /*finally {
                 progressBar.dispose();
-            }
+            }*/
 
             if (complete) {
                 status.setText("Done");
