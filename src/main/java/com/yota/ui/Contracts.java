@@ -94,6 +94,7 @@ public class Contracts extends JPanel {
                 Utils.showExDialog(ex.getMessage());
                 complete = false;
             } finally {
+                progressBar.setVisible(false);
                 progressBar.dispose();
             }
 
@@ -124,18 +125,18 @@ public class Contracts extends JPanel {
         frame.setVisible(true);
     }
 
-    public void initProgressBar() {
+    private void initProgressBar() {
         progressBar = new ProgressBar();
         progressBar.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         progressBar.setSize(400, 20);
         progressBar.setVisible(true);
     }
 
-    public void updateProgressBar(Integer value) {
+    private void updateProgressBar(Integer value) {
         int newValue = progressBar.getGenProgress().getValue() + value;
         newValue = newValue > progressBar.getGenProgress().getMaximum() ? 100 : newValue;
         progressBar.getGenProgress().setValue(newValue);
-        progressBar.getGenProgress().setString(String.valueOf(newValue) + "%");
+        progressBar.getGenProgress().setString(newValue + "%");
     }
 
     {
